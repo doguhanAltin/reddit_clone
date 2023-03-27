@@ -1,4 +1,5 @@
 import { authModalState } from "@/src/atoms/authModaAtom";
+import { auth } from "@/src/firebase/clientApp";
 import {
   Button,
   Flex,
@@ -10,15 +11,17 @@ import {
   ModalHeader,
   ModalOverlay,
   useDisclosure,
-  Text
+  Text,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { useRecoilState } from "recoil";
 import { AuthInputs } from "./AuthInputs";
 import { OAuthButtons } from "./OAuthButtons";
 
 export const AuthModal: React.FC = () => {
   const [modalState, setModalState] = useRecoilState(authModalState);
+  const [user, loading, error] = useAuthState(auth);
 
   const handleClose = () => {
     setModalState((prev) => ({
@@ -26,6 +29,10 @@ export const AuthModal: React.FC = () => {
       open: false,
     }));
   };
+  useEffect(() => {
+    user && handleClose();
+  }, [user]);
+
   return (
     <>
       <Modal isOpen={modalState.open} onClose={handleClose}>
@@ -51,7 +58,10 @@ export const AuthModal: React.FC = () => {
               pb={6}
             >
               <OAuthButtons />
-              <Text  color="gray.500" fontWeight={700}> OR</Text>
+              <Text color="gray.500" fontWeight={700}>
+                {" "}
+                OR
+              </Text>
               <AuthInputs />
             </Flex>
           </ModalBody>
