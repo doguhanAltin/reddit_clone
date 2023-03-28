@@ -1,14 +1,17 @@
 import { authModalState } from "@/src/atoms/authModaAtom";
 import { Button, Flex, Input, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { auth } from "@/src/firebase/clientApp";
+import { auth, firestore } from "@/src/firebase/clientApp";
 import { FIREBASE_ERRORS } from "@/src/firebase/errors";
+import { User } from "firebase/auth";
+import { addDoc, collection } from "firebase/firestore";
 export const SıgnUp: React.FC = () => {
   // #region Variables
-  const [createUserWithEmailAndPassword, user, loading, userError] =
+  const [createUserWithEmailAndPassword, userCred, loading, userError] =
     useCreateUserWithEmailAndPassword(auth);
+  const [user, setUser] = useState();
   // #endregion
 
   // #region States
@@ -24,13 +27,15 @@ export const SıgnUp: React.FC = () => {
 
   // #region Functions
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (signUpForm.password !== signUpForm.confirmPassword) {
       setError("Passwords do not match");
       return;
     }
-    createUserWithEmailAndPassword(signUpForm.email, signUpForm.password);
+    createUserWithEmailAndPassword(signUpForm.email, signUpForm.password).then(
+      (user) => createUserDocument(user?.user as User)
+    );
   };
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSignUpForm((prev) => ({
@@ -38,8 +43,15 @@ export const SıgnUp: React.FC = () => {
       [event.target.name]: event.target.value,
     }));
   };
-  // #endregion
 
+  const createUserDocument = async (user: User) => {
+    console.log(user);
+    await addDoc(
+      collection(firestore, "users"),
+      JSON.parse(JSON.stringify(user))
+    );
+  };
+  // #endregion
   return (
     <form onSubmit={onSubmit}>
       <Input
