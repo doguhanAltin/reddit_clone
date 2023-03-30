@@ -6,12 +6,31 @@ import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next";
 import safeJsonStringify from "safe-json-stringify";
 import React from "react";
+import { CommunityNotFound } from "@/src/components/Community/NotFound";
+import { Header } from "@/src/components/Community/Header";
+import { PageContent } from "@/src/components/Layout/PageContent";
 type CommunityPageProps = {
   communityData: Community;
 };
 
 const CommunityPage: React.FC<CommunityPageProps> = ({ communityData }) => {
-  return <div>{communityData.id}</div>;
+  if (!communityData) {
+    return <CommunityNotFound />;
+  }
+
+  return (
+    <>
+      <Header communityData={communityData} />
+      <PageContent>
+        <>
+          <div>LHS </div>
+        </>
+        <>
+          <div>RHS</div>
+        </>
+      </PageContent>
+    </>
+  );
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
