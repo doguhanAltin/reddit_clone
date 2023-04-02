@@ -25,6 +25,7 @@ import {
 } from "firebase/firestore";
 import { firestore, storage } from "@/src/firebase/clientApp";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import { useSelectFile } from "@/src/hooks/useSelectFile";
 
 export type TabItemType = {
   title: string;
@@ -57,13 +58,14 @@ const formTabs: Array<TabItemType> = [
 ];
 export const NewPostForm: React.FC<NewPostFormType> = ({ user }) => {
   // #region states
+  const { onSelectFile, selectedFile, setSelectedFile } = useSelectFile();
   const router = useRouter();
   const [selectTab, setSelectTab] = useState(formTabs[0].title);
   const [textInputs, setTextInputs] = useState({
     title: "",
     body: "",
   });
-  const [selectedFile, setSelectedFile] = useState<string>();
+  // const [selectedFile, setSelectedFile] = useState<string>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   // #endregion
@@ -109,17 +111,7 @@ export const NewPostForm: React.FC<NewPostFormType> = ({ user }) => {
     }
     setLoading(false);
   };
-  const onSelectImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const reader = new FileReader();
-    if (event.target.files?.[0]) {
-      reader.readAsDataURL(event.target.files[0]);
-    }
-    reader.onload = (readerEvent) => {
-      if (readerEvent.target?.result) {
-        setSelectedFile(readerEvent.target.result as string);
-      }
-    };
-  };
+
   const onTextChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -154,7 +146,7 @@ export const NewPostForm: React.FC<NewPostFormType> = ({ user }) => {
           <ImageUpload
             selectedFile={selectedFile}
             setSelectedTab={setSelectTab}
-            onSelectImage={onSelectImage}
+            onSelectImage={onSelectFile}
             setSelectedFile={setSelectedFile}
           />
         )}
