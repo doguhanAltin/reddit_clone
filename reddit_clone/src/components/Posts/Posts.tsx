@@ -55,12 +55,15 @@ export const Posts: React.FC<PostsProps> = ({ communityData }) => {
         <PostLoader />
       ) : (
         <Stack>
-          {postStateValue.posts.map((item) => (
+          {postStateValue.posts.map((post:Post,index) => (
             <PostItem
-              key={item.id}
-              post={item}
-              userIsCreator={user?.uid === item.creatorId}
-              userVoteValue={undefined}
+              key={post.id}
+              post={post}
+              userIsCreator={user?.uid === post.creatorId}
+              userVoteValue={
+                postStateValue.postVotes.find((vote) => post.id=== vote.postId)
+                  ?.voteValue
+              }
               onVote={onVote}
               onSelectPost={onSelectPost}
               onDeletePost={onDeletePost}

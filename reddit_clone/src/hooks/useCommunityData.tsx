@@ -25,8 +25,12 @@ export const useCommunityData = () => {
   const [user] = useAuthState(auth);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+
   useEffect(() => {
-    if (!user) return;
+    if (!user)  {
+      setCommunityStateValue((prev)=>({...prev,mySnippets:[]}))
+    }
     getMySnippets();
   }, [user]);
   const onJoinOrLeaveCommunity = (
