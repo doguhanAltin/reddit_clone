@@ -7,6 +7,7 @@ import {
   Image,
   Skeleton,
   Spinner,
+  Link,
 } from "@chakra-ui/react";
 import { async } from "@firebase/util";
 import moment from "moment";
@@ -25,6 +26,7 @@ type PostItemProps = {
   ) => void;
   onDeletePost: (post: Post) => Promise<boolean>;
   onSelectPost?: (post: Post) => void;
+  homePage?: boolean;
 };
 import { AiOutlineDelete } from "react-icons/ai";
 import { BsChat, BsDot } from "react-icons/bs";
@@ -45,6 +47,7 @@ export const PostItem: React.FC<PostItemProps> = ({
   onVote,
   onDeletePost,
   onSelectPost,
+  homePage,
 }) => {
   const [loadingImage, setLoadingImage] = useState(true);
   const [loadingDelete, setLoadingDelete] = useState(false);
@@ -117,6 +120,36 @@ export const PostItem: React.FC<PostItemProps> = ({
             fontSize={"9pt"}
           >
             {/* Hompage Check*/}
+            {homePage && (
+              <>
+                {post.imageUrl ? (
+                  <Image
+                    src={post.communityImageUrl}
+                    borderRadius={"full"}
+                    boxSize={"18px"}
+                    mr={2}
+                  />
+                ) : (
+                  <Icon
+                    as={FaReddit}
+                    fontSize={"18pt"}
+                    mr={1}
+                    color={"blue.500"}
+                  />
+                )}
+                <Link href={`r/${post.communityId}`}>
+                  <Text
+                    fontWeight={700}
+                    _hover={{ textDecoration: "underline" }}
+                    onClick={(event) => event.stopPropagation()}
+                  >
+                    {" "}
+                    {`r/${post.communityId}`}{" "}
+                  </Text>
+                </Link>
+                <Icon as={BsDot} color={"gray.500"} fontSize={8} />
+              </>
+            )}
             <Text>
               Posted by u/{post.creatorDisplayName}{" "}
               {moment(new Date(post.createdAt?.seconds * 1000)).fromNow()}

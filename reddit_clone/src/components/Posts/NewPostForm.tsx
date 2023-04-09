@@ -33,6 +33,7 @@ export type TabItemType = {
 };
 type NewPostFormType = {
   user: User;
+  communityImageURL?:string
 };
 const formTabs: Array<TabItemType> = [
   {
@@ -56,7 +57,7 @@ const formTabs: Array<TabItemType> = [
     icon: BsMic,
   },
 ];
-export const NewPostForm: React.FC<NewPostFormType> = ({ user }) => {
+export const NewPostForm: React.FC<NewPostFormType> = ({ user,communityImageURL }) => {
   // #region states
   const { onSelectFile, selectedFile, setSelectedFile } = useSelectFile();
   const router = useRouter();
@@ -76,6 +77,7 @@ export const NewPostForm: React.FC<NewPostFormType> = ({ user }) => {
     // create new post object => type Post
     const newPost: Post = {
       communityId: communityId as string,
+      communityImageURL:communityImageURL||"",
       creatorId: user.uid,
       creatorDisplayName: user.email!.split("@")[0],
       title: textInputs.title,
