@@ -53,7 +53,11 @@ export const useCommunityData = () => {
 
   useEffect(() => {
     if (!user) {
-      setCommunityStateValue((prev) => ({ ...prev, mySnippets: [] }));
+      setCommunityStateValue((prev) => ({
+        ...prev,
+        mySnippets: [],
+        snippetsFetched: false,
+      }));
     }
     getMySnippets();
   }, [user]);
@@ -82,6 +86,7 @@ export const useCommunityData = () => {
       setCommunityStateValue((prev) => ({
         ...prev,
         mySnippets: snippets as CommunitySnippet[],
+        snippetsFetched: true,
       }));
     } catch (error: any) {
       console.log(error);

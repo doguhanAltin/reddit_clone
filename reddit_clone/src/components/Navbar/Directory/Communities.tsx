@@ -40,7 +40,7 @@ export const Communities: React.FC = () => {
               displayText={`/r/${snippet.communityId}`}
               link={`/r/${snippet.communityId}`}
               iconColor="blue.500"
-              imageUrl={snippet.imageUrl}
+              imageURL={snippet.imageUrl}
             />
           ))}
       </Box>
@@ -70,7 +70,7 @@ export const Communities: React.FC = () => {
             displayText={`/r/${snippet.communityId}`}
             link={`/r/${snippet.communityId}`}
             iconColor="blue.500"
-            imageUrl={snippet.imageUrl}
+            imageURL={snippet.imageUrl}
           />
         ))}
       </Box>

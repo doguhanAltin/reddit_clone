@@ -1,4 +1,5 @@
 import { auth, firestore } from "@/src/firebase/clientApp";
+import { useDirectory } from "@/src/hooks/useDirectory";
 import {
   Box,
   Button,
@@ -24,6 +25,7 @@ import {
   setDoc,
   Transaction,
 } from "firebase/firestore";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { BsFillEyeFill, BsFillPersonFill } from "react-icons/bs";
@@ -45,6 +47,8 @@ export const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
   const [communityType, setCommunityType] = useState("public");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const { toggleMenuOpen } = useDirectory();
   // #endregion
 
   // #region Functions
@@ -97,6 +101,9 @@ export const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
           }
         );
       });
+      handleClose();
+      toggleMenuOpen();
+      router.push(`r/${communityName}`);
     } catch (error: any) {
       setError(
         `r/${communityName} could not be created because of ${error.message}`
